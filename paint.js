@@ -38,18 +38,20 @@ class Paint{
   }
   replaceColor(x, y, color){
     let arr = this.getZone(x, y, color)
-
+    console.log("-----------")
+    console.log(JSON.stringify(arr))
     /*     for (let i = 0; i < 20000; i+=4) {
       [this.data[i], this.data[i + 1], this.data[i + 2]] = [0, 0, 0];
     } */
   }
   getZone(x, y, color){
-    console.log(color)
     let index = (x + y * this.engine.height) * 4;
-    if (this.data[index] == color[0] && this.data[index + 1] == color[1] && this.data[index + 2] == color[2]){
-      return [this.getZone(x, y + 1)];
-    }
-    return;
+    
+    if (this.data[index] == color[0] & this.data[index + 1] == color[1] && this.data[index + 2] == color[2]) {
+      console.log("bruh")
+      return [this.getZone(x, y+1, color)];
+    }                                       //nefunguje spicena rekurze
+    return [x, y]
   }
   getClickedColor(x, y){
     this.data = this.getData();
