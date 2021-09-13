@@ -7,6 +7,10 @@ class Paint{
     this.lastLoc = []
   }
   mouseDown(x, y){
+    if (this.bucket) {
+      this.replaceColor(x,y, this.getClickedColor(x, y));
+      return;
+    }
     this.paint = true;
     this.lastLoc = [x, y];
     this.paintPoint(x, y);
@@ -28,6 +32,35 @@ class Paint{
   }
   clear(){
     this.engine.drawRect('White')
+  }
+  getData(){
+    return [...this.engine.ctx.getImageData(0, 0, this.engine.width, this.engine.height).data];
+  }
+  replaceColor(x, y, color){
+    let arr = this.getZone(x, y, color)
+
+    /*     for (let i = 0; i < 20000; i+=4) {
+      [this.data[i], this.data[i + 1], this.data[i + 2]] = [0, 0, 0];
+    } */
+  }
+  getZone(x, y, color){
+    console.log(color)
+    let index = (x + y * this.engine.height) * 4;
+    if (this.data[index] == color[0] && this.data[index + 1] == color[1] && this.data[index + 2] == color[2]){
+      return [this.getZone(x, y + 1)];
+    }
+    return;
+  }
+  getClickedColor(x, y){
+    this.data = this.getData();
+    let index = (x + y * this.engine.height) * 4;
+    return [this.data[index], this.data[index + 1], this.data[index + 2]]
+  }
+  saveData(data){
+    let imgData = new ImageData(this.engine.width, this.engine.height);
+    imgData.data.set(data)
+    console.log(imgData)
+    this.engine.ctx.putImageData(imgData, 0, 0)
   }
 }
 
