@@ -30,9 +30,7 @@ class Paint{
     this.engine.drawRect('White')
   }
 }
-function test(test){
-  console.log("kokot", test)
-}
+
 let paint = new Paint(new Engine(document.getElementById('canvas')))
 paint.clear()
 paint.engine.canvas.addEventListener('mousedown', e => paint.mouseDown(e.offsetX, e.offsetY))
