@@ -12,6 +12,7 @@ class Paint{
   mouseDown(x, y){
     if (this.bucket) {
       this.data = this.getData();
+      this.not = [];
       this.replaceColor(x,y, this.getPixelColor(x, y));
       return;
     }
@@ -29,22 +30,57 @@ class Paint{
     this.lastLoc = [x, y];
   }
   replaceColor(x, y, color){
-    if (this.getPixelColor(x,y).toString() == color.toString()){
-      this.engine.drawRect(this.color.toString(), [x, y], [1, 1]);
-      console.log("drawing at", x, y)
+    let p1 = this.checkSideFromPoint(x, y, color, "LEFT");
+    let p2 = this.checkSideFromPoint(x, y, color, "RIGHT");
+    //this.engine.drawLine(p1, p2, this.color, 1)
+    let i = p1[0];
+    console.log(i , p2[0])
+    while(i++ < p2[0]){
+      let k = this.checkSideFromPoint(i, y, color, "UP");
+      let k2 = this.checkSideFromPoint(i, y, color, "DOWN");
+      this.engine.drawLine(k2, k, this.color, 1)
+    }
+  }
+  checkSideFromPoint(x, y, color, side){
+    let p2 = [];
+    while (this.getPixelColor(x,y).toString() == color.toString()) {
+      if (x > this.engine.width || x < 0 || y > this.engine.height || y < 0) break;
+      p2 = [x, y];
+      switch (side) {
+        case "RIGHT":
+          x++;
+          break;
+        case "LEFT":
+          x--;
+          break;
+        case "UP":
+          y--;
+          break;
+        case "DOWN":
+          y++;
+          break;
+      }
+    }
+    return p2
+  }
+/*   replaceColor(x, y, color){
+    if (this.getPixelColor(x,y).toString() == color.toString() && !this.not.includes([x,y].toString())){
+      this.not.push([x, y].toString())
+      this.engine.drawRect(this.color.toString(), [x, y], [4, 4]);
+      //console.log("drawing at", x, y)
     } else {
-      console.log("not le same clr")
+      //console.log("not le same clr")
       return;
     }
     if (x > this.engine.width || x <= 0 || y > this.engine.height || y <= 0){
-      console.log("returning")
+     // console.log("returning")
       return;
     }
-    this.replaceColor(x + 1, y, color);
-    //this.replaceColor(x - 1, y, color);
-    this.replaceColor(x, y + 1, color);
-    //this.replaceColor(x, y - 1, color);
-  }
+    this.replaceColor(x -= 4, y, color);
+    this.replaceColor(x, y -= 4, color);  
+    this.replaceColor(x += 4, y, color);
+    this.replaceColor(x, y += 4, color);
+  } */
   paintPoint(x, y){
     this.engine.drawRect(this.color, [x - this.size / 2, y - this.size / 2], [this.size, this.size])
   }
