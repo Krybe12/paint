@@ -10,8 +10,10 @@
 </head>
 <body class="bg-secondary">
   <div class="d-flex justify-content-center pt-5 pb-1 gap-3">
+    <label for="bucket">bucket</label>
+    <input type="checkbox" name="bucket" id="" onchange="paint.changeBucket()">
     <input type="button" value="clear" class="button btn-warning" onclick="paint.clear()">
-    <input type="color" onchange="paint.color = this.value">
+    <input type="color" onchange="paint.color = hexToRgb(this.value)">
     <input type="number" onchange="paint.size = this.value" min="1" max="500" value="5">
   </div>
   <div class="d-flex align-items-center justify-content-center pb-5">

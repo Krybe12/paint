@@ -3,12 +3,16 @@ class Paint{
     this.engine = engine;
     this.paint = false;
     this.size = 5;
-    this.color = 'Black';
+    this.color = 'rgb(0, 0, 0)';
     this.lastLoc = []
+  }
+  changeBucket(){
+    this.bucket ? this.bucket = false : this.bucket = true;
   }
   mouseDown(x, y){
     if (this.bucket) {
-      this.replaceColor(x,y, this.getClickedColor(x, y));
+      this.data = this.getData();
+      this.replaceColor(x,y, this.getPixelColor(x, y));
       return;
     }
     this.paint = true;
@@ -24,6 +28,23 @@ class Paint{
     this.paintLine(this.lastLoc, [x, y]);
     this.lastLoc = [x, y];
   }
+  replaceColor(x, y, color){
+    if (this.getPixelColor(x,y).toString() == color.toString()){
+      this.engine.drawRect(this.color.toString(), [x, y], [1, 1]);
+      console.log("drawing at", x, y)
+    } else {
+      console.log("not le same clr")
+      return;
+    }
+    if (x > this.engine.width || x <= 0 || y > this.engine.height || y <= 0){
+      console.log("returning")
+      return;
+    }
+    this.replaceColor(x + 1, y, color);
+    //this.replaceColor(x - 1, y, color);
+    this.replaceColor(x, y + 1, color);
+    //this.replaceColor(x, y - 1, color);
+  }
   paintPoint(x, y){
     this.engine.drawRect(this.color, [x - this.size / 2, y - this.size / 2], [this.size, this.size])
   }
@@ -36,25 +57,7 @@ class Paint{
   getData(){
     return [...this.engine.ctx.getImageData(0, 0, this.engine.width, this.engine.height).data];
   }
-  replaceColor(x, y, color){
-    let arr = this.getZone(x, y, color)
-    console.log("-----------")
-    console.log(JSON.stringify(arr))
-    /*     for (let i = 0; i < 20000; i+=4) {
-      [this.data[i], this.data[i + 1], this.data[i + 2]] = [0, 0, 0];
-    } */
-  }
-  getZone(x, y, color){
-    let index = (x + y * this.engine.height) * 4;
-    
-    if (this.data[index] == color[0] & this.data[index + 1] == color[1] && this.data[index + 2] == color[2]) {
-      console.log("bruh")
-      return [this.getZone(x, y+1, color)];
-    }                                       //nefunguje spicena rekurze
-    return [x, y]
-  }
-  getClickedColor(x, y){
-    this.data = this.getData();
+  getPixelColor(x, y){
     let index = (x + y * this.engine.height) * 4;
     return [this.data[index], this.data[index + 1], this.data[index + 2]]
   }
@@ -65,7 +68,10 @@ class Paint{
     this.engine.ctx.putImageData(imgData, 0, 0)
   }
 }
-
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})` : null;
+}
 let paint = new Paint(new Engine(document.getElementById('canvas')))
 paint.clear()
 paint.engine.canvas.addEventListener('mousedown', e => paint.mouseDown(e.offsetX, e.offsetY))
