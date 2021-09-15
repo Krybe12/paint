@@ -34,7 +34,6 @@ class Paint{
     let p2 = this.checkSideFromPoint(x, y, color, "RIGHT");
     //this.engine.drawLine(p1, p2, this.color, 1)
     let i = p1[0];
-    console.log(i , p2[0])
     while(i++ < p2[0]){
       let k = this.checkSideFromPoint(i, y, color, "UP");
       let k2 = this.checkSideFromPoint(i, y, color, "DOWN");
@@ -45,7 +44,6 @@ class Paint{
     let p2 = [];
     while (this.getPixelColor(x,y).toString() == color.toString()) {
       if (x > this.engine.width || x < 0 || y > this.engine.height || y < 0) break;
-      p2 = [x, y];
       switch (side) {
         case "RIGHT":
           x++;
@@ -60,27 +58,11 @@ class Paint{
           y++;
           break;
       }
+      p2 = [x, y];
     }
+    if (!p2.length) p2 = [x, y];
     return p2
   }
-/*   replaceColor(x, y, color){
-    if (this.getPixelColor(x,y).toString() == color.toString() && !this.not.includes([x,y].toString())){
-      this.not.push([x, y].toString())
-      this.engine.drawRect(this.color.toString(), [x, y], [4, 4]);
-      //console.log("drawing at", x, y)
-    } else {
-      //console.log("not le same clr")
-      return;
-    }
-    if (x > this.engine.width || x <= 0 || y > this.engine.height || y <= 0){
-     // console.log("returning")
-      return;
-    }
-    this.replaceColor(x -= 4, y, color);
-    this.replaceColor(x, y -= 4, color);  
-    this.replaceColor(x += 4, y, color);
-    this.replaceColor(x, y += 4, color);
-  } */
   paintPoint(x, y){
     this.engine.drawRect(this.color, [x - this.size / 2, y - this.size / 2], [this.size, this.size])
   }
@@ -123,6 +105,12 @@ setInterval(function(){
   x.append('et_pb_contact_telefon_0', 123456789);
   x.append('et_pb_contact_spolecnost_0', 'EducaGang');
   x.append('et_pb_contact_message_0', 'ahoj marťo');
+  x.append('et_pb_contactform_submit_0', 'et_contact_proccess');
+  x.append('et_pb_contact_captcha_0', 19);
+  x.append('_wpnonce-et-pb-contact-form-submitted-0', '3ea9622004');
+  x.append('_wp_http_referer', '/');
+  x.append('et_pb_contact_email_fields_0', '[{"field_id":"et_pb_contact_name_0","original_id":"name","required_mark":"required","field_type":"input","field_label":"Jméno a příjmení*"},{"field_id":"et_pb_contact_email_0","original_id":"email","required_mark":"required","field_type":"email","field_label":"E-mailová adresa*"},{"field_id":"et_pb_contact_telefon_0","original_id":"telefon","required_mark":"required","field_type":"input","field_label":"Telefonní číslo*"},{"field_id":"et_pb_contact_spolecnost_0","original_id":"spolecnost","required_mark":"not_required","field_type":"input","field_label":"Společnost"},{"field_id":"et_pb_contact_message_0","original_id":"message","required_mark":"required","field_type":"text","field_label":"S čím Vám můžeme pomoci?*"}]')
+  x.append('token', '')
   
   fetch('', {
     method: 'post',
@@ -130,7 +118,7 @@ setInterval(function(){
   }).then(function(response) {
     return response.text();
   }).then(function(data) {
-    
+    console.log("done")
   });
-},300) */
+},2000) */
 
