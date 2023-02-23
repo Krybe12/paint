@@ -4,16 +4,26 @@ class Paint{
     this.paint = false;
     this.size = 5;
     this.color = 'rgb(0, 0, 0)';
-    this.lastLoc = []
+    this.lastLoc = [];
   }
   changeBucket(){
     this.bucket ? this.bucket = false : this.bucket = true;
   }
+
+  floodFill(x, y){
+    if(this.getPixelColor(x, y).toString() == this.bg){
+      this.engine.drawRect(this.color, [x - 2, y - 2], [7, 7]);
+      this.floodFill(x, y - 5);
+      this.floodFill(x, y + 5);
+      this.floodFill(x - 5, y);
+      this.floodFill(x + 5, y);
+    }
+  }
+
   mouseDown(x, y){
     if (this.bucket) {
-      this.data = this.getData();
-      this.not = [];
-      this.replaceColor(x,y, this.getPixelColor(x, y));
+      this.bg = this.getPixelColor(x, y).toString()
+      this.floodFill(x, y);
       return;
     }
     this.paint = true;
@@ -76,8 +86,7 @@ class Paint{
     return [...this.engine.ctx.getImageData(0, 0, this.engine.width, this.engine.height).data];
   }
   getPixelColor(x, y){
-    let index = (x + y * this.engine.height) * 4;
-    return [this.data[index], this.data[index + 1], this.data[index + 2]]
+    return this.engine.ctx.getImageData(x, y, 1, 1).data; 
   }
   saveData(data){
     let imgData = new ImageData(this.engine.width, this.engine.height);
